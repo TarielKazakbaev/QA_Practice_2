@@ -331,11 +331,16 @@ public class Connection1 {
 
     public void updatePassengers(Passengers passengers) {
         String SQL = "update \"QA_Practice_2\".passengers set" +
-                " id_passport =?" +
+                " id_passport =?,inn=?,fio=?,gender=?,country_id=?" +
                 " where id_passport =?; ";
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement(SQL)) {
             stmt.setString(1, passengers.getId_passport());
+            stmt.setInt(2,passengers.getInn());
+            stmt.setString(3,passengers.getFio());
+            stmt.setString(4,passengers.getGender());
+            stmt.setInt(5,passengers.getCountry_id());
+            stmt.setString(6,passengers.getId_passport());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -369,51 +374,48 @@ public class Connection1 {
     }
 
     public void chooseActionCountry(Connection1 connection1) {
-
         while (exit) {
-            System.out.println("     Меню Страны:\n"+
-                    "1)- добавления страны.\n" +
-                    "2)- удаление страны \n" +
-                    "3)- изменить аэропорт по коду страны \n" +
-                    "4)- введите код страны чтобы получить информацию по Id \n" +
-                    "5)- чтобы получить всю информацию о странах \n" +
-                    "0)- для выхода в главное меню ");
-            int enterAction1 = scan.nextInt();
-            if (enterAction1 == 1) {
-                System.out.println("Введите код страны:");
-                int enterAction2 = scan.nextInt();
-                System.out.println("Введите название страны:");
-                String enterAction3 = scan.next();
-                countries.setId(enterAction2);
-                countries.setName(enterAction3);
-                connection1.insertCountries(countries);
-            } else if (enterAction1 == 2) {
-                System.out.println("Какую страну хотите удалить? Введите номер ID");
-                int enterAction = scan.nextInt();
-                countries.setId(enterAction);
-                connection1.deleteCountries(countries);
-            } else if (enterAction1 == 3) {
-                System.out.println("Введите код страны чтобы поменять аэропорт:");
-                int enterAction = scan.nextInt();
-                airports.setId(enterAction);
-                System.out.println("Введите код аэропорта которую хотите сохранить:");
-                int enterAction3 = scan.nextInt();
-                airports.setCountry_id(enterAction3);
-                connection1.updateAirports(airports);
-            } else if (enterAction1 == 4) {
-                System.out.println("Введите код страны чтобы получить информацию: ");
-                int enterAction = scan.nextInt();
-                countries.setId(enterAction);
-                connection1.selectCountriesId(countries);
-            } else if (enterAction1 == 5) {
-                connection1.selectCountries(countries);
-            }
-            else if(enterAction1==0){
-                connection1.chooseActionMenu(connection1);
-            }
-            else {
-                System.out.println("Ввели цифру вместо буквы или наоборот");
-            }
+                System.out.println("     Меню Страны:\n" +
+                        "1)- добавления страны.\n" +
+                        "2)- удаление страны \n" +
+                        "3)- изменить аэропорт по коду страны \n" +
+                        "4)- введите код страны чтобы получить информацию по Id \n" +
+                        "5)- чтобы получить всю информацию о странах \n" +
+                        "0)- для выхода в главное меню ");
+                int enterAction1 = scan.nextInt();
+                if (enterAction1 == 1) {
+                    System.out.println("Введите код страны:");
+                    int enterAction2 = scan.nextInt();
+                    System.out.println("Введите название страны:");
+                    String enterAction3 = scan.next();
+                    countries.setId(enterAction2);
+                    countries.setName(enterAction3);
+                    connection1.insertCountries(countries);
+                } else if (enterAction1 == 2) {
+                    System.out.println("Какую страну хотите удалить? Введите номер ID");
+                    int enterAction = scan.nextInt();
+                    countries.setId(enterAction);
+                    connection1.deleteCountries(countries);
+                } else if (enterAction1 == 3) {
+                    System.out.println("Введите код страны чтобы поменять аэропорт:");
+                    int enterAction = scan.nextInt();
+                    airports.setId(enterAction);
+                    System.out.println("Введите код аэропорта которую хотите сохранить:");
+                    int enterAction3 = scan.nextInt();
+                    airports.setCountry_id(enterAction3);
+                    connection1.updateAirports(airports);
+                } else if (enterAction1 == 4) {
+                    System.out.println("Введите код страны чтобы получить информацию: ");
+                    int enterAction = scan.nextInt();
+                    countries.setId(enterAction);
+                    connection1.selectCountriesId(countries);
+                } else if (enterAction1 == 5) {
+                    connection1.selectCountries(countries);
+                } else if (enterAction1 == 0) {
+                    connection1.chooseActionMenu(connection1);
+                } else {
+                    System.out.println("Ввели цифру вместо буквы или наоборот");
+                }
         }
     }
 
@@ -473,7 +475,7 @@ public class Connection1 {
     public void chooseActionPassengers(Connection1 connection1)  {
 
         while (exit) {
-            System.out.println("     Меню Пассажира:\n"+
+            System.out.println("     Меню Пассажиров:\n"+
                     "1)- добавления пассажира.\n" +
                     "2)- удаление пассажира \n" +
                     "3)- изменить пассажира \n" +
@@ -519,6 +521,9 @@ public class Connection1 {
                 System.out.println("Введите код страны пассажира :");
                 int enterAction5 = scan.nextInt();
                 passengers.setCountry_id(enterAction5);
+                System.out.println("Введите Id паспорта пассажира :");
+                String enterAction6 = scan.next();
+                passengers.setId_passport(enterAction6);
                 connection1.updatePassengers(passengers);
 
             } else if (enterAction1 == 4) {
@@ -672,11 +677,11 @@ public class Connection1 {
     public void chooseActionMenu(Connection1 connection1) {
         while (exit) {
             System.out.println("     Главное Меню:\n"+
-                    "1)- Меню со странами.\n" +
-                    "2)- Меню с аэропортами \n" +
-                    "3)- Меню с рейсами \n" +
-                    "4)- Меню с пассажирами \n" +
-                    "5)- Меню с билетами \n" +
+                    "1)- Меню Стран\n" +
+                    "2)- Меню Аэропортов \n" +
+                    "3)- Меню Рейсов \n" +
+                    "4)- Меню Пассажиров \n" +
+                    "5)- Меню Билетов \n" +
                     "0)- для выхода ");
             int enterAction = scan.nextInt();
             if (enterAction == 1) {
@@ -698,6 +703,4 @@ public class Connection1 {
             }
         }
     }
-
-
 }
